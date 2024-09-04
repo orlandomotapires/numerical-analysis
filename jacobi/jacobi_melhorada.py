@@ -1,44 +1,40 @@
+import numpy as np
 import pandas as pd
 
-def jacobi_melhorado(A, b, x0, tol, max_iter):
-    n = len(A)
-    x = x0.copy()
-    results = []
+# Definindo a matriz A e o vetor b
+A = np.array([[10, 2, 1], [1, 5, 1], [2, 3, 10]], dtype=float)
+b = np.array([7, -8, 6], dtype=float)
 
-    for k in range(max_iter):
-        x_old = x.copy()
-        for i in range(n):
-            sum1 = sum(A[i][j] * x[j] for j in range(n) if j != i)
-            x[i] = (b[i] - sum1) / A[i][i]
-        
-        # Cálculo dos erros
-        abs_err = [abs(x[i] - x_old[i]) for i in range(n)]
-        rel_err = [abs_err[i] / abs(x[i]) if x[i] != 0 else 0 for i in range(n)]
-        
-        # Armazena os resultados
-        results.append({
-            'Iteração': k,
-            'x': x[0],
-            'y': x[1],
-            'z': x[2],
-            'abs': max(abs_err),
-            'rel': max(rel_err)
-        })
+# Inicializando os valores
+x = np.array([0.7, -1.6, 0.6], dtype=float)  # Valores iniciais para x, y, z
+tolerance = 0.05  # Definindo a tolerância
+iterations = 100  # Número máximo de iterações
+results = []
 
-        if max(abs_err) < tol:
-            break
+# Método de Jacobi Melhorada (Gauss-Seidel)
+for i in range(iterations):
+    x_old = x.copy()  # Mantém os valores antigos para cálculo do erro
+    for j in range(len(A)):
+        s1 = np.dot(A[j, :j], x[:j])  # Usando os valores mais recentes
+        s2 = np.dot(A[j, j+1:], x_old[j+1:])  # Usando os valores anteriores para as posições que ainda não foram atualizadas
+        x[j] = (b[j] - s1 - s2) / A[j, j]
     
-    df = pd.DataFrame(results)
-    return df
+    abs_error = np.linalg.norm(x - x_old, ord=np.inf)
+    rel_error = abs_error / np.linalg.norm(x, ord=np.inf)
+    
+    results.append({
+        'Iteração': i,
+        'x': x[0],
+        'y': x[1],
+        'z': x[2],
+        'abs': abs_error,
+        'rel': rel_error
+    })
+    
+    if abs_error < tolerance:
+        print(f'Convergiu em {i} iterações.')
+        break
 
-# Matriz dos coeficientes
-A = [[2, -1, 0.5], [1, 3, -1], [0.5, -1, 1]]
-b = [0.5, 1, 1.5]
-x0 = [0, 0, 0]  # Chute inicial
-tol = 0.0001
-max_iter = 20
-
-# Executa o método de Jacobi Melhorado
-df_jacobi_melhorado = jacobi_melhorado(A, b, x0, tol, max_iter)
-df_jacobi_melhorado.to_csv('jacobi_melhorado_results.csv', index=False)
-print(df_jacobi_melhorado)
+# Criando DataFrame para resultados
+df_gauss_seidel = pd.DataFrame(results)
+print(df_gauss_seidel)

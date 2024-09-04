@@ -2,12 +2,13 @@ import numpy as np
 import pandas as pd
 
 # Definindo a matriz A e o vetor b
-A = np.array([[4, -1, 0], [-1, 4, -1], [0, -1, 3]], dtype=float)
-b = np.array([15, 10, 10], dtype=float)
+A = np.array([[10, 2, 1], [1, 5, 1], [2, 3, 10]], dtype=float)
+b = np.array([7, -8, 6], dtype=float)
 
 # Inicializando os valores
-x = np.zeros_like(b)
-iterations = 9  # Definindo o número de iterações fornecido
+x = np.array([0.7, -1.6, 0.6], dtype=float)  # Valores iniciais para x, y, z
+tolerance = 0.05  # Definindo a tolerância
+iterations = 100  # Número máximo de iterações
 results = []
 
 # Método da Jacobi
@@ -29,6 +30,10 @@ for i in range(iterations):
         'abs': abs_error,
         'rel': rel_error
     })
+    
+    if abs_error < tolerance:
+        print(f'Convergiu em {i} iterações.')
+        break
     
     x = x_new
 

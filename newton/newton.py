@@ -62,8 +62,6 @@ def newton(x0, tol):
     erro_relativo = abs(erro_absoluto / x)
     erro_funcao = abs(f(x))
 
-    print(f"{iter_count:<8}{x:<8.4f}{fx:<14.10f}{dfx:<14.10f}{erro_absoluto:<10.4f}{erro_relativo:<12.4f}{erro_funcao:<12.5f}")
-
     results.append({
         'Iteração': iter_count,
         'x': x,
