@@ -1,7 +1,3 @@
-Here's a comprehensive README that covers all the methods we've discussed:
-
----
-
 # Nonlinear and linear System Solver Methods
 
 ## Overview
@@ -257,7 +253,3 @@ def secant_method(f, x0, x1, tol=1e-5, max_iter=100):
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Feel free to customize this README as needed!
