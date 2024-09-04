@@ -11,22 +11,22 @@ tolerance = 0.05  # Define the tolerance
 iterations = 100  # Maximum number of iterations
 results = []
 
-# Jacobi Method
+# Improved Jacobi Method (Gauss-Seidel)
 for i in range(iterations):
-    x_new = np.zeros_like(x)
+    x_old = x.copy()  # Keep old values for error calculation
     for j in range(len(A)):
-        s1 = np.dot(A[j, :j], x[:j])
-        s2 = np.dot(A[j, j+1:], x[j+1:])
-        x_new[j] = (b[j] - s1 - s2) / A[j, j]
+        s1 = np.dot(A[j, :j], x[:j])  # Use the most recent values
+        s2 = np.dot(A[j, j+1:], x_old[j+1:])  # Use old values for positions that are not yet updated
+        x[j] = (b[j] - s1 - s2) / A[j, j]
     
-    abs_error = np.linalg.norm(x_new - x, ord=np.inf)
-    rel_error = abs_error / np.linalg.norm(x_new, ord=np.inf)
+    abs_error = np.linalg.norm(x - x_old, ord=np.inf)
+    rel_error = abs_error / np.linalg.norm(x, ord=np.inf)
     
     results.append({
         'Iteration': i,
-        'x': x_new[0],
-        'y': x_new[1],
-        'z': x_new[2],
+        'x': x[0],
+        'y': x[1],
+        'z': x[2],
         'Absolute Error': abs_error,
         'Relative Error': rel_error
     })
@@ -34,9 +34,7 @@ for i in range(iterations):
     if abs_error < tolerance:
         print(f'Converged in {i} iterations.')
         break
-    
-    x = x_new
 
 # Create DataFrame for results
-df_jacobi = pd.DataFrame(results)
-print(df_jacobi)
+df_gauss_seidel = pd.DataFrame(results)
+print(df_gauss_seidel)

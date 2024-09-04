@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-# Definindo a matriz Jacobiana e a função f
+# Define the Jacobian matrix and function f
 def jacobian(x, K):
     return np.array([[-150 * np.sin(x[0]) - 2 * K, K], 
                      [K, -50 * np.sin(x[1]) - K]])
@@ -10,14 +10,14 @@ def f(x, K):
     return np.array([150 * np.cos(x[0]) + K * (x[1] - x[0]) - K * x[0], 
                      50 * np.cos(x[1]) - K * (x[1] - x[0])])
 
-# Inicializando os valores
+# Initialize values
 x = np.array([0.5, 0.5])
-K = 10  # Defina o valor de K aqui
-tolerance = 1e-3  # Defina a tolerância desejada
-max_iterations = 100  # Defina o número máximo de iterações
+K = 10  # Define the value of K here
+tolerance = 1e-3  # Define the desired tolerance
+max_iterations = 100  # Define the maximum number of iterations
 results = []
 
-# Método da Jacobiana
+# Newton-Raphson method using the Jacobian matrix
 for i in range(max_iterations):
     J = jacobian(x, K)
     F = f(x, K)
@@ -29,11 +29,11 @@ for i in range(max_iterations):
     rel_error = abs_error / np.linalg.norm(x, ord=np.inf)
     
     results.append({
-        'Iteração': i,
+        'Iteration': i,
         'x1': x_new[0],
         'x2': x_new[1],
-        'abs': abs_error,
-        'rel': rel_error
+        'Absolute Error': abs_error,
+        'Relative Error': rel_error
     })
     
     if abs_error < tolerance:
@@ -42,6 +42,6 @@ for i in range(max_iterations):
     
     x = x_new
 
-# Criando DataFrame para resultados
-df_jacobiana = pd.DataFrame(results)
-print(df_jacobiana)
+# Creating DataFrame for results
+df_jacobian = pd.DataFrame(results)
+print(df_jacobian)

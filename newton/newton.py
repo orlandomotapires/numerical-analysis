@@ -4,7 +4,7 @@ import pandas as pd
 def f(x):
     return x * math.log(x) - 1
 
-def derivada_f(x):
+def derivative_f(x):
     return math.log(x) + 1
 
 def newton(x0, tol):
@@ -12,77 +12,73 @@ def newton(x0, tol):
     x = x0
     prev_x = x
     
-    # Lista para armazenar os resultados
+    # List to store results
     results = []
 
-    #print(f"{'ITER.':<8}{'x':<8}{'f(x)':<14}{'f\'(x)':<14}{'|xn - xn-1|':<10}{'|xn - xn-1|/|xn|':<12}{'|F(xn)|':<12}")
-
+    # Newton-Raphson loop
     while True:
         prev_x = x
         fx = f(x)
-
-        dfx = derivada_f(x)
+        dfx = derivative_f(x)
         
-        # Verifica se a derivada é zero para evitar divisão por zero
+        # Check if the derivative is zero to avoid division by zero
         if dfx == 0:
-            print("Derivada é zero. O método não pode continuar.")
+            print("Derivative is zero. The method cannot continue.")
             return None
         
+        # Update the value of x
         x = x - fx / dfx
         
-        # Calcula o erro
-        erro_absoluto = abs(x - prev_x)
-        erro_relativo = abs(erro_absoluto / x)
-        erro_funcao = abs(f(x))
+        # Calculate errors
+        absolute_error = abs(x - prev_x)
+        relative_error = abs(absolute_error / x)
+        function_error = abs(f(x))
 
-        # Exibe os resultados da iteração atual
-        print(f"{iter_count:<8}{prev_x:<8.4f}{fx:<14.10f}{dfx:<14.10f}{erro_absoluto:<10.4f}{erro_relativo:<12.4f}{erro_funcao:<12.5f}")
-
-        # Armazena os resultados em uma lista
+        # Store results
         results.append({
-            'Iteração': iter_count,
+            'Iteration': iter_count,
             'x': prev_x,
             'f(x)': fx,
             'f\'(x)': dfx,
-            '|xn - xn-1|': erro_absoluto,
-            '|xn - xn-1|/|xn|': erro_relativo,
-            '|F(xn)|': erro_funcao
+            '|xn - xn-1|': absolute_error,
+            '|xn - xn-1|/|xn|': relative_error,
+            '|F(xn)|': function_error
         })
 
-        # Critério de parada
-        if erro_absoluto < tol:
+        # Stopping criterion
+        if absolute_error < tol:
             break
 
         iter_count += 1
 
-    # Última iteração
+    # Last iteration
     fx = f(x)
-    dfx = derivada_f(x)
-    erro_absoluto = abs(x - prev_x)
-    erro_relativo = abs(erro_absoluto / x)
-    erro_funcao = abs(f(x))
+    dfx = derivative_f(x)
+    absolute_error = abs(x - prev_x)
+    relative_error = abs(absolute_error / x)
+    function_error = abs(f(x))
 
     results.append({
-        'Iteração': iter_count,
+        'Iteration': iter_count,
         'x': x,
         'f(x)': fx,
         'f\'(x)': dfx,
-        '|xn - xn-1|': erro_absoluto,
-        '|xn - xn-1|/|xn|': erro_relativo,
-        '|F(xn)|': erro_funcao
+        '|xn - xn-1|': absolute_error,
+        '|xn - xn-1|/|xn|': relative_error,
+        '|F(xn)|': function_error
     })
 
-    # Cria o DataFrame
+    # Create DataFrame
     df = pd.DataFrame(results)
     return x, df
 
-# Parâmetros iniciais
-x0 = 2  # Chute inicial
-tol = 0.001  # Tolerância
+# Initial parameters
+x0 = 2  # Initial guess
+tol = 0.001  # Tolerance
 
-# Executa o método de Newton e salva os resultados em um DataFrame
-raiz, df_resultados = newton(x0, tol)
+# Run the Newton method and save results in a DataFrame
+root, df_results = newton(x0, tol)
 
-if raiz is not None:
-    print(f"\nRaiz aproximada: {raiz:.4f}")
-    df_resultados.to_csv('./df_resultados_newton.csv')
+if root is not None:
+    print(f"\nApproximated root: {root:.4f}")
+    df_results.to_csv('./df_results_newton.csv', index=False)
